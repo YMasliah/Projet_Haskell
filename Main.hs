@@ -12,13 +12,14 @@ newtype ListeAssociative = L [(Code,String)]
 
 instance Table ListeAssociative where
 	empty = L [] 
-	ajouter L a b = L [("va savoir",b),a]
+	ajouter L [] b = L [(0,b)]
+	ajouter L a b = L [a:(fst(last a)+1,b)]
 	codeOf L a b = lookupbis b a
 	stringOf L a b = lookup b a
-	isIn L a b = 1 && (lookupbis b a)
-	split L a b = (b,1234,b)
+	isIn L a b = if codeOf L a b == Nothing then False else True
+	split L a b = isIn L a b
 	
-lookupbis                  :: (Eq a) => a -> [(a,b)] -> Maybe b
+lookupbis                  :: (Eq b) => b -> [(a,b)] -> Maybe a
 lookupbis _key []          =  Nothing
 lookupbis  key ((x,y):xys)
     | key == y          =  Just x
