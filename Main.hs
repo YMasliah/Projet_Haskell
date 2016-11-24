@@ -1,3 +1,6 @@
+import Data.Char
+import Test.QuickCheck
+
 type Code = Int
 
 class Table a where
@@ -35,7 +38,6 @@ lookupbis _key []          =  Nothing
 lookupbis  key ((x,y):xys)
     | key == y          =  Just x
     | otherwise         =  lookupbis key xys	
-
 		
 -- regarder le wikipedia  
 -- le encode recupere une chaine de caractere
@@ -48,6 +50,9 @@ lzwEncode (L table) bdd = if suffixe == []
 											else [prefixCode] ++ lzwEncode (ajouter (L table) (prefix ++ [(head suffixe)])) suffixe 
 				where
 					(prefix,Just prefixCode,suffixe) = split (L table) bdd 
+					
+fromJust          :: Maybe a -> a
+fromJust (Just x) = x
 
 lzwDecode :: ListeAssociative -> [Code] -> String
 lzwDecode (L table) (code:codes) = word ++ lzw_Decode (L table) word codes
@@ -56,13 +61,20 @@ lzwDecode (L table) (code:codes) = word ++ lzw_Decode (L table) word codes
 		
 lzw_Decode :: ListeAssociative -> String -> [Code] -> String
 lzw_Decode (L table) prefix [] = [] --ajouter (L table) prefix
-lzw_Decode (L table) prefix (code:codes) = word ++ lzw_Decode (ajouter (L table) (prefix ++ [(head word)])) word codes
+lzw_Decode (L table) prefix (code:codes) = if word == Nothing 
+																						then newWord ++ lzw_Decode (L newTable) newWord codes
+																						else fromJust word ++ lzw_Decode (L newTable) (fromJust word) codes
 	where
-		Just word = stringOf (L table) code
-
+		word = stringOf (L table) code
+		newWord = (prefix ++ [(head prefix)])
+		(L newTable) = ajouter (L table) newWord
+		
 
 test :: ListeAssociative -> ListeAssociative 
 test (L a) = ajouter (ajouter (L a) "tata") "toto"
 
 valeur :: ListeAssociative
 valeur = L [(0,"a"),(1,"b"),(2,"c")]
+code :: [Int]
+code = [0,1,3,2,4,7,0,9,10,0]
+string = "ababcbababaaaaaaa"
