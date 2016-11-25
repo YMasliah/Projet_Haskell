@@ -11,18 +11,18 @@ class Table a where
 	stringOf :: a -> Code -> Maybe String
 	isIn :: a -> String -> Bool
 	split :: a -> String -> (String,Maybe Code,String)
-	lzwEncode :: Table a => a -> String -> [Code]
-	lzwDecode :: Table a => a -> [Code] -> String
-	lzw_Decode :: Table a => a -> String -> [Code] -> String
 
 instance Table Apref where
 	empty = (Apref []) 
-	ajouter (Apref []) [b] = (Apref [(0,b,empty)])
-	ajouter (Apref a) b =  
+	ajouter (Apref a) [b] = (Apref (a ++ [(0,b,empty)]))
+	ajouter (Apref (a:autres)) (d:bs) = if b == d then ajouter c bs else ajouter (Apref autres) (d:bs)
+		where
+			(_,b,c) = a 
+--ajouter ECHECCC TRY AGAIN ! xD
 {-	codeOf :: a -> String -> Maybe Code
 	stringOf :: a -> Code -> Maybe String
 	isIn :: a -> String -> Bool
-	split :: a -> String -> (String,Maybe Code,String)-}
+	split :: a -> String -> (String,Maybe Code,String)
 
 findIsInMax :: ListeAssociative -> String -> String -> String
 findIsInMax (L a) [] c = c
@@ -34,7 +34,7 @@ lookupbis                  :: (Eq b) => b -> [(a,b)] -> Maybe a
 lookupbis _key []          =  Nothing
 lookupbis  key ((x,y):xys)
     | key == y          =  Just x
-    | otherwise         =  lookupbis key xys
+    | otherwise         =  lookupbis key xys-}
 
 newtype ListeAssociative = L [(Code,String)]
 								deriving Show
@@ -57,27 +57,6 @@ instance Table ListeAssociative where
 									prefixCode = codeOf (L a) prefix
 									suffixe = drop (length prefix) b
 
-{-	
-	lzwEncode (L table) bdd = if suffixe == [] 
-									then [prefixCode] --ajouter (L table) prefix
-									else [prefixCode] ++ lzwEncode (ajouter (L table) (prefix ++ [(head suffixe)])) suffixe 
-							where
-								(prefix,Just prefixCode,suffixe) = split (L table) bdd
-								
-	lzwDecode (L table) (code:codes) = word ++ lzw_Decode (L table) word codes
-									where
-										Just word = stringOf (L table) code
-		
-	
-	lzw_Decode (L table) prefix [] = [] --ajouter (L table) prefix
-	lzw_Decode (L table) prefix (code:codes) = if word == Nothing 
-													then newWord ++ lzw_Decode (L newTable) newWord codes
-													else fromJust word ++ lzw_Decode (L newTable) (fromJust word) codes
-											where
-												word = stringOf (L table) code
-												newWord = (prefix ++ [(head prefix)])
-												(L newTable) = ajouter (L table) newWord
-	
 findIsInMax :: ListeAssociative -> String -> String -> String
 findIsInMax (L a) [] c = c
 findIsInMax (L a) (b:bs) c = if isIn (L a) word == True 
@@ -89,10 +68,9 @@ findIsInMax (L a) (b:bs) c = if isIn (L a) word == True
 lookupbis                  :: (Eq b) => b -> [(a,b)] -> Maybe a
 lookupbis _key []          =  Nothing
 lookupbis  key ((x,y):xys)
-
     | key == y          =  Just x
     | otherwise         =  lookupbis key xys	
--}	
+
 -- regarder le wikipedia  
 -- le encode recupere une chaine de caractere
 -- il regarde caractere par caractere, tant qu'il reconnais le couple de caractere il continue, d'es qu'il en trouve un nouveau le rajoute dans la table et lui met une valeur
