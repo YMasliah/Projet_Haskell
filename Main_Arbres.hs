@@ -1,5 +1,7 @@
 import Test.QuickCheck
 import Data.Maybe
+import Data.Char
+import Data.Int
 
 type Code = Int
 
@@ -74,22 +76,22 @@ instance Table ListeAssociative where
           prefixCode = codeOf (L a) prefix
           suffixe = drop (length prefix) b
 
---lookup sur le premier argument au lieu du second	
+--lookup sur le premier argument au lieu du second  
 lookupbis                  :: (Eq b) => b -> [(a,b)] -> Maybe a
 lookupbis _key []          =  Nothing
 lookupbis  key ((x,y):xys)
     | key == y          =  Just x
     | otherwise         =  lookupbis key xys  
 
-	
--- ci dessous toute les fonctions polymorphes avec toute les tables car elles utilisent seulement des methodes instancié pour la modification des tables 	
+    
+-- ci dessous toute les fonctions polymorphes avec toute les tables car elles utilisent seulement des methodes instancié pour la modification des tables    
 -- cherche le plus grand string que connais la table
 findIsInMax :: Table a => a -> String -> String -> String
 findIsInMax table [] charIsIn = charIsIn
 findIsInMax table (char:string) charIsIn = if isIn table word == True then findIsInMax table string word else charIsIn
   where
     word = (charIsIn ++ [char])
-	
+    
 lzwEncode :: Table a => a -> String -> [Code]
 lzwEncode table bdd = 
   if suffixe == [] 
@@ -106,13 +108,15 @@ lzwDecode table (code:codes) = word ++ lzw_Decode table word codes
 lzw_Decode :: Table a => a  -> String -> [Code] -> String
 lzw_Decode table prefix [] = []
 lzw_Decode table prefix (code:codes) = 
-  if word == Nothing 
-  then newWord ++ lzw_Decode newTable newWord codes
-  else fromJust word ++ lzw_Decode newTable (fromJust word) codes
+  if isNothing wordTemp 
+    then currentWord ++ lzw_Decode currentTable currentWord codes
+    else newWord ++ lzw_Decode newTable newWord codes
   where
-    word = stringOf table code
-    newWord = (prefix ++ [(head prefix)])
-    newTable = ajouter table newWord
+    wordTemp = stringOf table code
+    newWord = fromJust wordTemp
+    newTable = ajouter table (prefix ++ [(head newWord)])
+    currentWord = (prefix ++ [(head prefix)])
+    currentTable = ajouter table currentWord
 
 -- la zone de test 
 
@@ -135,7 +139,10 @@ charsMaj :: ListeAssociative
 charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(0,"V"),(22,"W"),(23,"X"),(24,"Y"),(25,"Z")]
 
 charsMin :: ListeAssociative
-charsMin = L [('0'..'25','a'..'z')]
+charsMin = L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(0,"v"),(22,"w"),(23,"x"),(24,"y"),(25,"z")]
+
+charsIzi :: ListeAssociative
+charsIzi = L [(0,"a"),(1,"b"),(2,"c")]
 
 code1 :: [Int]
 code1 = [0,1,3,2,4,7,0,9,10,0]
@@ -149,10 +156,5 @@ arbre1 = Apref [('a',0,(Apref [('b',3,(Apref []))])),('b',1,(Apref [])),('c',2,(
 
 arbre2 :: Apref
 arbre2 = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[]))]
-
-
-
-
-
 
  

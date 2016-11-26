@@ -115,15 +115,17 @@ lzwDecode table (code:codes) = word ++ lzw_Decode table word codes
     Just word = stringOf table code
     
 lzw_Decode :: Table a => a  -> String -> [Code] -> String
-lzw_Decode table prefix [] = [] --ajouter (L table) prefix
+lzw_Decode table prefix [] = []
 lzw_Decode table prefix (code:codes) = 
-  if word == Nothing 
-  then newWord ++ lzw_Decode newTable newWord codes
-  else fromJust word ++ lzw_Decode newTable (fromJust word) codes
+  if isNothing wordTemp 
+    then currentWord ++ lzw_Decode currentTable currentWord codes
+    else newWord ++ lzw_Decode newTable newWord codes
   where
-    word = stringOf table code
-    newWord = (prefix ++ [(head prefix)])
-    newTable = ajouter table newWord
+    wordTemp = stringOf table code
+    newWord = fromJust wordTemp
+    newTable = ajouter table (prefix ++ [(head newWord)])
+    currentWord = (prefix ++ [(head prefix)])
+    currentTable = ajouter table currentWord
 
 -- la zone de test 
 

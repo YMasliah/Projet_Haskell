@@ -59,14 +59,17 @@ lzwDecode table (code:codes) = word ++ lzw_Decode table word codes
 		Just word = stringOf table code
 		
 lzw_Decode :: Table a => a  -> String -> [Code] -> String
-lzw_Decode table prefix [] = [] --ajouter (L table) prefix
-lzw_Decode table prefix (code:codes) = if word == Nothing 
-																						then newWord ++ lzw_Decode newTable newWord codes
-																						else fromJust word ++ lzw_Decode newTable (fromJust word) codes
-	where
-		word = stringOf table code
-		newWord = (prefix ++ [(head prefix)])
-		newTable = ajouter table newWord
+lzw_Decode table prefix [] = []
+lzw_Decode table prefix (code:codes) = 
+  if isNothing wordTemp 
+    then currentWord ++ lzw_Decode currentTable currentWord codes
+    else newWord ++ lzw_Decode newTable newWord codes
+  where
+    wordTemp = stringOf table code
+    newWord = fromJust wordTemp
+    newTable = ajouter table (prefix ++ [(head newWord)])
+    currentWord = (prefix ++ [(head prefix)])
+    currentTable = ajouter table currentWord
 
 -- la zone de test 
 
@@ -79,16 +82,19 @@ genSafeString = vectorOf 20 genSafeChar
 test :: ListeAssociative -> ListeAssociative 
 test (L a) = ajouter (ajouter (L a) "tata") "toto"
 
-grosTest :: ListeAssociative -> [Bool]
+{-grosTest :: ListeAssociative -> [Bool]
 grosTest (L a) = replicate 20 (if string == string2 then True else False) 
 	where
 		string = genSafeString
 		string2 = lzwDecode (L a) (lzwEncode (L a) string)
+-}
 
 valeur :: ListeAssociative
 valeur = L [(0,"a"),(1,"b"),(2,"c")]
+
 code :: [Int]
 code = [0,1,3,2,4,7,0,9,10,0]
+
 string = "ababcbababaaaaaaa"
 
 
