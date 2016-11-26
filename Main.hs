@@ -1,4 +1,5 @@
 import Test.QuickCheck
+import Data.Maybe
 
 type Code = Int
 
@@ -14,35 +15,57 @@ class Table a where
 
 instance Table Apref where
   empty = (Apref []) 
-  ajouter (Apref a) [b] = (Apref (a ++ [(b,0,empty)]))
-  ajouter (Apref (d:autres)) (e:bs) = if a == e then Apref ((a,b,(ajouter c bs)):autres) else ajouter (Apref autres) (e:bs)
+  ajouter (Apref arbre) chaine = ajouterR (Apref arbre) chaine code
     where
-      (a,b,c) = d 
-	  code = nbnoeud (Apref d)
---ajouter ECHECCC TRY AGAIN ! xD
-{-  codeOf :: a -> String -> Maybe Code
-  stringOf :: a -> Code -> Maybe String
-  isIn :: a -> String -> Bool
-  split :: a -> String -> (String,Maybe Code,String)
+      code = nbnoeud (Apref arbre)
+  codeOf (Apref []) _ = Nothing
+  codeOf (Apref ((char,b,_):autres)) [lettre] = if lettre == char then Just b else codeOf (Apref autres) [lettre]
+  codeOf (Apref (noeud:autres)) (char:chaine) = if a == char then codeOf c chaine else codeOf (Apref autres) (char:chaine) 
+    where
+    (a,b,c) = noeud 
+  stringOf (Apref a) code = if string == [] then Nothing else Just string
+    where
+        string = stringOfR (Apref a) code 
+  isIn (Apref arbre) string = if codeOf (Apref arbre) string == Nothing then False else True
+  split (Apref arbre) string = (prefix, prefixCode, suffixe)
+        where
+          prefix = findIsInMaxTree (Apref arbre) string []
+          prefixCode = codeOf (Apref arbre) prefix
+          suffixe = drop (length prefix) string  
 
-findIsInMax :: ListeAssociative -> String -> String -> String
-findIsInMax (L a) [] c = c
-findIsInMax (L a) (b:bs) c = if isIn (L a) word == True then findIsInMax (L a) bs word else c
+findIsInMaxTree :: Apref -> String -> String -> String
+findIsInMaxTree (Apref arbre) [] charIsIn = charIsIn
+findIsInMaxTree (Apref arbre) (char:string) charIsIn = if isIn (Apref arbre) word == True then findIsInMaxTree (Apref arbre) string word else charIsIn
   where
-    word = (c ++ [b])
-  
-lookupbis                  :: (Eq b) => b -> [(a,b)] -> Maybe a
-lookupbis _key []          =  Nothing
-lookupbis  key ((x,y):xys)
-    | key == y          =  Just x
-    | otherwise         =  lookupbis key xys-}
-	
+    word = (charIsIn ++ [char])
+
+stringOfR :: Apref -> Code -> String    
+stringOfR (Apref ((char,codebis,noeud):autres)) code = if code == codebis then [char] else if teststringOfR noeud code then [char] ++ (stringOfR noeud code) else if teststringOfR (Apref autres) code then (stringOfR (Apref autres) code) else []
+{-stringOfR (Apref (noeud:autres)) code = if teststringOfR c code then [a] ++ (stringOfR c code) else if teststringOfR (Apref autres) code then (stringOfR (Apref autres) code) else []
+    | (stringOfR c code) /= []  = [a] ++ (stringOfR c code)
+    | (stringOfR (Apref autres) code) /= [] = (stringOfR (Apref autres) code)
+    where
+    (a,b,c) = noeud-}
+
+-- Une sorte de isIn avec un code en entrée
+teststringOfR :: Apref -> Code -> Bool
+teststringOfR (Apref []) _ = False
+teststringOfR (Apref ((char,codebis,noeud):autres)) code = if code == codebis then True else (teststringOfR (Apref autres) code) || (teststringOfR noeud code)
+    
+ajouterR :: Apref -> String -> Code -> Apref
+ajouterR (Apref noeud) [lettre] code = (Apref (noeud ++ [(lettre,code,empty)]))
+ajouterR (Apref (branche:autres)) (char:chaine) code = if a == char then Apref ((a,b,(ajouterR c chaine code)):autres) else (Apref ([branche] ++ sousArbre))
+  where
+  (Apref sousArbre) = ajouterR (Apref autres) (char:chaine) code
+  (a,b,c) = branche
+    
+    
 nbnoeud :: Apref -> Code 
 nbnoeud (Apref []) = 0
 nbnoeud (Apref (d:autres)) = 1 + nbnoeud c + nbnoeud (Apref autres)
-	where
-		  (a,b,c) = d 
-		  
+    where
+          (a,b,c) = d 
+          
 newtype ListeAssociative = L [(Code,String)]
                 deriving Show
 
@@ -81,13 +104,10 @@ lookupbis  key ((x,y):xys)
 lzwEncode :: Table a => a -> String -> [Code]
 lzwEncode table bdd = 
   if suffixe == [] 
-  then [prefixCode] --ajouter (L table) prefix
-  else [prefixCode] ++ lzwEncode (ajouter table (prefix ++ [(head suffixe)])) suffixe 
+    then [prefixCode] --ajouter (L table) prefix
+    else [prefixCode] ++ lzwEncode (ajouter table (prefix ++ [(head suffixe)])) suffixe 
   where
     (prefix,Just prefixCode,suffixe) = split table bdd 
-          
-fromJust          :: Maybe a -> a
-fromJust (Just x) = x
 
 lzwDecode :: Table a => a  -> [Code] -> String
 lzwDecode table (code:codes) = word ++ lzw_Decode table word codes
