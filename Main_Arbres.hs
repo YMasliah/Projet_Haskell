@@ -136,20 +136,25 @@ grosTest (L a) = replicate 20 (if string == string2 then True else False)
     string2 = lzwDecode (L a) (lzwEncode (L a) string)
 -}
 charsMaj :: ListeAssociative
-charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(0,"V"),(22,"W"),(23,"X"),(24,"Y"),(25,"Z")]
+charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(22,"V"),(23,"W"),(24,"X"),(25,"Y"),(26,"Z")]
 
 charsMin :: ListeAssociative
-charsMin = L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(0,"v"),(22,"w"),(23,"x"),(24,"y"),(25,"z")]
+charsMin = L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(22,"v"),(23,"w"),(24,"x"),(25,"y"),(26,"z")]
 
 charsIzi :: ListeAssociative
 charsIzi = L [(0,"a"),(1,"b"),(2,"c")]
 
-code1 :: [Int]
-code1 = [0,1,3,2,4,7,0,9,10,0]
-
-string1 = "ababcbababaaaaaaa"
-
-string2 = "ab"
+string1 = "bonjourjemappelleyannmasliah"
+string2 = "voicimonbinomeredouanetigrara"
+string3 = "noussommesentraindefairelestest"
+string4 = "surleprojetdehaskell"
+string5 = "normalementtoutlestestdevraient"
+string6 = "marchersurlarbreetlalisteassociative"
+string7 = "nousnavonspascomprislhistoiredesbytes"
+string8 = "pourlemomentmaispeutetreoncomprendra"
+string9 = "avantlerenduquiseferaledernierjourde"
+string10 = "novembrequiestunjeudi"
+string11 = (string1 ++ string2 ++ string3 ++ string4 ++ string5 ++ string6 ++ string7 ++ string8 ++ string9 ++ string10)
 
 arbre1 :: Apref
 arbre1 = Apref [('a',0,(Apref [('b',3,(Apref []))])),('b',1,(Apref [])),('c',2,(Apref[]))]
@@ -157,4 +162,19 @@ arbre1 = Apref [('a',0,(Apref [('b',3,(Apref []))])),('b',1,(Apref [])),('c',2,(
 arbre2 :: Apref
 arbre2 = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[]))]
 
+--arbre3 :: Apref
+--arbre3 = Apref [(elements ['a'..'z'],elements [0..26],(Apref []))]
+
+test1 = (lzwDecode charsMin (lzwEncode charsMin string1)) == string1
+test2 = (lzwDecode charsMin (lzwEncode charsMin string2)) == string2
+test3 = (lzwDecode charsMin (lzwEncode charsMin string3)) == string3
+test4 = (lzwDecode charsMin (lzwEncode charsMin string4)) == string4
+test5 = (lzwDecode charsMin (lzwEncode charsMin string5)) == string5
+test6 = (lzwDecode charsMin (lzwEncode charsMin string6)) == string6
+test7 = (lzwDecode charsMin (lzwEncode charsMin string7)) == string7
+test8 = (lzwDecode charsMin (lzwEncode charsMin string8)) == string8
+test9 = (lzwDecode charsMin (lzwEncode charsMin string9)) == string9
+test10 = (lzwDecode charsMin (lzwEncode charsMin string10)) == string10
+
+test11 = (lzwDecode charsMin (lzwEncode charsMin string11)) == string11
  
