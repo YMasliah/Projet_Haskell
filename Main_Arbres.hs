@@ -29,29 +29,21 @@ instance Table Apref where
   isIn (Apref arbre) string = if codeOf (Apref arbre) string == Nothing then False else True
   split (Apref arbre) string = (prefix, prefixCode, suffixe)
         where
-          prefix = findIsInMaxTree (Apref arbre) string []
+          prefix = findIsInMax (Apref arbre) string []
           prefixCode = codeOf (Apref arbre) prefix
           suffixe = drop (length prefix) string  
 
-findIsInMaxTree :: Apref -> String -> String -> String
-findIsInMaxTree (Apref arbre) [] charIsIn = charIsIn
-findIsInMaxTree (Apref arbre) (char:string) charIsIn = if isIn (Apref arbre) word == True then findIsInMaxTree (Apref arbre) string word else charIsIn
-  where
-    word = (charIsIn ++ [char])
-
+-- decoupe l'arbre en sous arbre et cherche dans chaque sous arbre si il y as le code.
+-- chaque fois qu'il avance d'une profondeur dans l'arbre il enregistre la lettre qu'il y as dans le 3plet
 stringOfR :: Apref -> Code -> String    
 stringOfR (Apref ((char,codebis,noeud):autres)) code = if code == codebis then [char] else if teststringOfR noeud code then [char] ++ (stringOfR noeud code) else if teststringOfR (Apref autres) code then (stringOfR (Apref autres) code) else []
-{-stringOfR (Apref (noeud:autres)) code = if teststringOfR c code then [a] ++ (stringOfR c code) else if teststringOfR (Apref autres) code then (stringOfR (Apref autres) code) else []
-    | (stringOfR c code) /= []  = [a] ++ (stringOfR c code)
-    | (stringOfR (Apref autres) code) /= [] = (stringOfR (Apref autres) code)
-    where
-    (a,b,c) = noeud-}
 
--- Une sorte de isIn avec un code en entrée
+-- Methode isIn avec un code en entrée
 teststringOfR :: Apref -> Code -> Bool
 teststringOfR (Apref []) _ = False
 teststringOfR (Apref ((char,codebis,noeud):autres)) code = if code == codebis then True else (teststringOfR (Apref autres) code) || (teststringOfR noeud code)
-    
+
+-- la fonction ajouter de l'arbre avec l'information du code final en argument    
 ajouterR :: Apref -> String -> Code -> Apref
 ajouterR (Apref noeud) [lettre] code = (Apref (noeud ++ [(lettre,code,empty)]))
 ajouterR (Apref (branche:autres)) (char:chaine) code = if a == char then Apref ((a,b,(ajouterR c chaine code)):autres) else (Apref ([branche] ++ sousArbre))
@@ -59,7 +51,7 @@ ajouterR (Apref (branche:autres)) (char:chaine) code = if a == char then Apref (
   (Apref sousArbre) = ajouterR (Apref autres) (char:chaine) code
   (a,b,c) = branche
     
-    
+-- fonction qui compte le nombre de noeud dans l'arbre pour connaitre le code du prochain noeud
 nbnoeud :: Apref -> Code 
 nbnoeud (Apref []) = 0
 nbnoeud (Apref (d:autres)) = 1 + nbnoeud c + nbnoeud (Apref autres)
@@ -82,29 +74,26 @@ instance Table ListeAssociative where
           prefixCode = codeOf (L a) prefix
           suffixe = drop (length prefix) b
 
-findIsInMax :: ListeAssociative -> String -> String -> String
-findIsInMax (L a) [] c = c
-findIsInMax (L a) (b:bs) c = if isIn (L a) word == True 
-                then findIsInMax (L a) bs word
-                else c
-              where
-                word = (c ++ [b])
-  
+--lookup sur le premier argument au lieu du second	
 lookupbis                  :: (Eq b) => b -> [(a,b)] -> Maybe a
 lookupbis _key []          =  Nothing
 lookupbis  key ((x,y):xys)
     | key == y          =  Just x
     | otherwise         =  lookupbis key xys  
 
--- regarder le wikipedia  
--- le encode recupere une chaine de caractere
--- il regarde caractere par caractere, tant qu'il reconnais le couple de caractere il continue, d'es qu'il en trouve un nouveau le rajoute dans la table et lui met une valeur
---
-
+	
+-- ci dessous toute les fonctions polymorphes avec toute les tables car elles utilisent seulement des methodes instancié pour la modification des tables 	
+-- cherche le plus grand string que connais la table
+findIsInMax :: Table a => a -> String -> String -> String
+findIsInMax table [] charIsIn = charIsIn
+findIsInMax table (char:string) charIsIn = if isIn table word == True then findIsInMax table string word else charIsIn
+  where
+    word = (charIsIn ++ [char])
+	
 lzwEncode :: Table a => a -> String -> [Code]
 lzwEncode table bdd = 
   if suffixe == [] 
-    then [prefixCode] --ajouter (L table) prefix
+    then [prefixCode]
     else [prefixCode] ++ lzwEncode (ajouter table (prefix ++ [(head suffixe)])) suffixe 
   where
     (prefix,Just prefixCode,suffixe) = split table bdd 
@@ -115,7 +104,7 @@ lzwDecode table (code:codes) = word ++ lzw_Decode table word codes
     Just word = stringOf table code
     
 lzw_Decode :: Table a => a  -> String -> [Code] -> String
-lzw_Decode table prefix [] = [] --ajouter (L table) prefix
+lzw_Decode table prefix [] = []
 lzw_Decode table prefix (code:codes) = 
   if word == Nothing 
   then newWord ++ lzw_Decode newTable newWord codes
@@ -142,21 +131,24 @@ grosTest (L a) = replicate 20 (if string == string2 then True else False)
     string = genSafeString
     string2 = lzwDecode (L a) (lzwEncode (L a) string)
 -}
-chars :: ListeAssociative
-chars = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(0,"V"),(22,"W"),(23,"X"),(24,"Y"),(25,"Z")]
+charsMaj :: ListeAssociative
+charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(0,"V"),(22,"W"),(23,"X"),(24,"Y"),(25,"Z")]
 
-code :: [Int]
-code = [0,1,3,2,4,7,0,9,10,0]
+charsMin :: ListeAssociative
+charsMin = L [('0'..'25','a'..'z')]
 
-string = "ababcbababaaaaaaa"
+code1 :: [Int]
+code1 = [0,1,3,2,4,7,0,9,10,0]
 
-stringbis = "ab"
+string1 = "ababcbababaaaaaaa"
 
-arbre :: Apref
-arbre = Apref [('a',0,(Apref [('b',3,(Apref []))])),('b',1,(Apref [])),('c',2,(Apref[]))]
+string2 = "ab"
 
-arbrebis :: Apref
-arbrebis = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[]))]
+arbre1 :: Apref
+arbre1 = Apref [('a',0,(Apref [('b',3,(Apref []))])),('b',1,(Apref [])),('c',2,(Apref[]))]
+
+arbre2 :: Apref
+arbre2 = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[]))]
 
 
 
