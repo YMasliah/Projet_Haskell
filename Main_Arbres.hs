@@ -235,4 +235,12 @@ test18 a = (lzwDecode a (lzwEncode a string18)) == string18
 test19 a = (lzwDecode a (lzwEncode a string19)) == string19
 test20 a = (lzwDecode a (lzwEncode a string20)) == string20
 
---testUltime = test1 && test2 && test3 && test4 && test5 && test6 && test7 && test8 && test9 && test10 && test11 && test12 && test13 && test14 && test15 && test16 && test17 && test18 && test19 && test20
+testUltime a = test1 a && test2 a && test3 a && test4 a && test5 a && test6 a && test7 a && test8 a && test9 a && test10 a && test11 a && test12 a && test13 a && test14 a && test15 a && test16 a && test17 a && test18 a && test19 a && test20 a
+{-
+*Main> testUltime charsMin
+True
+(400.56 secs, 100,704,230,024 bytes)
+*Main> testUltime arbreChar
+True
+(274.41 secs, 91,104,684,136 bytes)
+-}
