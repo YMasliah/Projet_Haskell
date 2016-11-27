@@ -1,7 +1,6 @@
 import Test.QuickCheck
 import Data.Maybe
 import Data.Char
-import Data.Int
 
 type Code = Int
 
@@ -25,9 +24,7 @@ instance Table Apref where
   codeOf (Apref (noeud:autres)) (char:chaine) = if a == char then codeOf c chaine else codeOf (Apref autres) (char:chaine) 
     where
     (a,b,c) = noeud 
-  stringOf (Apref a) code = if string == [] then Nothing else Just string
-    where
-        string = stringOfR (Apref a) code 
+  stringOf (Apref a) code = stringOfR (Apref a) code []
   isIn (Apref arbre) string = if codeOf (Apref arbre) string == Nothing then False else True
   split (Apref arbre) string = (prefix, prefixCode, suffixe)
         where
@@ -37,14 +34,14 @@ instance Table Apref where
 
 -- decoupe l'arbre en sous arbre et cherche dans chaque sous arbre si il y as le code.
 -- chaque fois qu'il avance d'une profondeur dans l'arbre il enregistre la lettre qu'il y as dans le 3plet
-stringOfR :: Apref -> Code -> String    
-stringOfR (Apref ((char,codebis,noeud):autres)) code = if code == codebis then [char] else if teststringOfR noeud code then [char] ++ (stringOfR noeud code) else if teststringOfR (Apref autres) code then (stringOfR (Apref autres) code) else []
-
--- Methode isIn avec un code en entrée
-teststringOfR :: Apref -> Code -> Bool
-teststringOfR (Apref []) _ = False
-teststringOfR (Apref ((char,codebis,noeud):autres)) code = if code == codebis then True else (teststringOfR (Apref autres) code) || (teststringOfR noeud code)
-
+-- la fonction a une complexité tres eleve, n^3 surement. il doit y avoir une methode beaucoup plus rapide.
+-- Edit : V2 faite, c'est plus que n^2 je crois, maintenant il est plus rapide que la liste associative (test a la fin du fichier)
+stringOfR :: Apref -> Code -> String -> Maybe String
+stringOfR (Apref []) _ _ = Nothing
+stringOfR (Apref ((char,codebis,noeud):autres)) code string = if code == codebis then Just (string ++ [char]) else if isJust noeuds then noeuds else if isJust branches then branches else Nothing  
+    where
+        branches = stringOfR (Apref autres) code string 
+        noeuds = stringOfR noeud code (string ++ [char])
 -- la fonction ajouter de l'arbre avec l'information du code final en argument    
 ajouterR :: Apref -> String -> Code -> Apref
 ajouterR (Apref noeud) [lettre] code = (Apref (noeud ++ [(lettre,code,empty)]))
@@ -135,6 +132,7 @@ grosTest (L a) = replicate 20 (if string == string2 then True else False)
     string = genSafeString
     string2 = lzwDecode (L a) (lzwEncode (L a) string)
 -}
+
 charsMaj :: ListeAssociative
 charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(22,"V"),(23,"W"),(24,"X"),(25,"Y"),(26,"Z")]
 
@@ -155,26 +153,86 @@ string8 = "pourlemomentmaispeutetreoncomprendra"
 string9 = "avantlerenduquiseferaledernierjourde"
 string10 = "novembrequiestunjeudi"
 string11 = (string1 ++ string2 ++ string3 ++ string4 ++ string5 ++ string6 ++ string7 ++ string8 ++ string9 ++ string10)
+string12 = string11 ++ string11
+string13 = string12 ++ string12
+string14 = string13 ++ string13
+string15 = string14 ++ string14
+string16 = string15 ++ string15
+string17 = string16 ++ string16
+string18 = string17 ++ string17
+string19 = string18 ++ string18
+string20 = string19 ++ string19
 
-arbre1 :: Apref
-arbre1 = Apref [('a',0,(Apref [('b',3,(Apref []))])),('b',1,(Apref [])),('c',2,(Apref[]))]
+arbre :: Apref
+arbre = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[]))]
 
-arbre2 :: Apref
-arbre2 = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[]))]
+string = "ababcbababaaaaaaa"
+
+code :: [Int]
+code = [0,1,3,2,4,7,0,9,10,0]
+
+arbreChar :: Apref
+arbreChar = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[])),('d',3,(Apref [])),('e',4,(Apref [])),('f',5,(Apref[])),('g',6,(Apref [])),('h',7,(Apref [])),('i',8,(Apref[])),('j',9,(Apref [])),('k',10,(Apref [])),('l',11,(Apref[])),('m',12,(Apref [])),('n',13,(Apref [])),('o',14,(Apref[])),('p',15,(Apref [])),('q',16,(Apref [])),('r',17,(Apref[])),('s',18,(Apref [])),('t',19,(Apref [])),('u',20,(Apref[])),('v',21,(Apref [])),('w',22,(Apref [])),('x',23,(Apref[])),('y',24,(Apref [])),('z',25,(Apref []))]
 
 --arbre3 :: Apref
 --arbre3 = Apref [(elements ['a'..'z'],elements [0..26],(Apref []))]
 
-test1 = (lzwDecode charsMin (lzwEncode charsMin string1)) == string1
-test2 = (lzwDecode charsMin (lzwEncode charsMin string2)) == string2
-test3 = (lzwDecode charsMin (lzwEncode charsMin string3)) == string3
-test4 = (lzwDecode charsMin (lzwEncode charsMin string4)) == string4
-test5 = (lzwDecode charsMin (lzwEncode charsMin string5)) == string5
-test6 = (lzwDecode charsMin (lzwEncode charsMin string6)) == string6
-test7 = (lzwDecode charsMin (lzwEncode charsMin string7)) == string7
-test8 = (lzwDecode charsMin (lzwEncode charsMin string8)) == string8
-test9 = (lzwDecode charsMin (lzwEncode charsMin string9)) == string9
-test10 = (lzwDecode charsMin (lzwEncode charsMin string10)) == string10
+-- a partir du test 19 sa commence a etre tres long pour la liste associative
+{- voici des test des 2 types, nous pouvons voir que l'encodage est beaucoup plus rapide avec l'arbre et beaucoup plus lent en decodage (par rapport a la liste associative)
+*Main> let a = lzwEncode charsMin string18 in a==a
+True
+(32.14 secs, 8,048,460,088 bytes)
+*Main> let a = lzwEncode arbreChar string18 in a==a
+True
+(12.12 secs, 4,300,215,536 bytes)
+*Main> test18 charsMin
+True
+(33.61 secs, 8,631,901,936 bytes)
+*Main> test18 arbreChar
+True
+(75.30 secs, 24,234,537,648 bytes)
+*Main> let a = lzwEncode arbreChar string20 in a==a
+True
+(56.08 secs, 19,658,114,232 bytes)
+*Main> let a = lzwEncode charsMin string20 in a==a
+True
+(244.45 secs, 61,103,861,384 bytes)
+-}
+{- test sur la V2 de l'arbre
+*Main> test16 arbreChar
+True
+(7.00 secs, 2,288,803,128 bytes)
+*Main> test18 arbreChar
+True
+(32.70 secs, 10,924,613,928 bytes)
+*Main> test20 arbreChar
+True
+(143.97 secs, 48,084,181,176 bytes)
+*Main> test20 charsMin
+True
+(254.38 secs, 63,607,594,816 bytes)
+-}
 
-test11 = (lzwDecode charsMin (lzwEncode charsMin string11)) == string11
- 
+test1 a = (lzwDecode a (lzwEncode a string1)) == string1
+test2 a = (lzwDecode a (lzwEncode a string2)) == string2
+test3 a = (lzwDecode a (lzwEncode a string3)) == string3
+test4 a = (lzwDecode a (lzwEncode a string4)) == string4
+test5 a = (lzwDecode a (lzwEncode a string5)) == string5
+test6 a = (lzwDecode a (lzwEncode a string6)) == string6
+test7 a = (lzwDecode a (lzwEncode a string7)) == string7
+test8 a = (lzwDecode a (lzwEncode a string8)) == string8
+test9 a = (lzwDecode a (lzwEncode a string9)) == string9
+test10 a = (lzwDecode a (lzwEncode a string10)) == string10
+
+test11 a = (lzwDecode a (lzwEncode a string11)) == string11
+test12 a = (lzwDecode a (lzwEncode a string12)) == string12
+test13 a = (lzwDecode a (lzwEncode a string13)) == string13
+test14 a = (lzwDecode a (lzwEncode a string14)) == string14
+test15 a = (lzwDecode a (lzwEncode a string15)) == string15
+test16 a = (lzwDecode a (lzwEncode a string16)) == string16
+test17 a = (lzwDecode a (lzwEncode a string17)) == string17
+test18 a = (lzwDecode a (lzwEncode a string18)) == string18
+test19 a = (lzwDecode a (lzwEncode a string19)) == string19
+test20 a = (lzwDecode a (lzwEncode a string20)) == string20
+
+--testUltime = test1 && test2 && test3 && test4 && test5 && test6 && test7 && test8 && test9 && test10 && test11 && test12 && test13 && test14 && test15 && test16 && test17 && test18 && test19 && test20
