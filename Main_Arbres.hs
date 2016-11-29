@@ -1,6 +1,7 @@
 import Test.QuickCheck
 import Data.Maybe
 import Data.Char
+import qualified Data.List.Split as Splits
 
 type Code = Int
 
@@ -115,6 +116,37 @@ lzw_Decode table prefix (code:codes) =
     currentWord = (prefix ++ [(head prefix)])
     currentTable = ajouter table currentWord
 
+
+stringToCode :: String -> [Code]
+stringToCode string = stringCodeToCode stringCodes
+ where
+  stringTemp = init (tail string)
+  stringCodes = Splits.splitOn "," stringTemp
+  
+stringCodeToCode :: [String] -> [Code]
+stringCodeToCode [] = []
+stringCodeToCode [stringCode] = [read stringCode :: Code]
+stringCodeToCode (stringCode:stringCodes) = [code] ++ stringCodeToCode stringCodes
+ where
+  code = read stringCode :: Code
+
+-- Le main pour l'executable du Encode   
+main :: IO ()
+main =  do
+ putStrLn "Bonjour, entrez le String a encoder (alphabet en minuscule et les espaces)"
+ string <- getLine
+ let result = (lzwEncode arbreChar string)
+ print result
+
+{-
+-- Le main pour l'executable du Decode
+main =  do
+ putStrLn "Bonjour, entrez le String a decoder (alphabet en minuscule et les espaces)"
+ string <- getLine
+ let code = stringToCode string
+ let result = (lzwDecode arbreChar code)
+ print result
+-}
 -- la zone de test 
 
 genSafeChar :: Gen Char
@@ -134,10 +166,10 @@ grosTest (L a) = replicate 20 (if string == string2 then True else False)
 -}
 
 charsMaj :: ListeAssociative
-charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(22,"V"),(23,"W"),(24,"X"),(25,"Y"),(26,"Z")]
+charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(22,"V"),(23,"W"),(24,"X"),(25,"Y"),(26,"Z"),(27," ")]
 
 charsMin :: ListeAssociative
-charsMin = L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(22,"v"),(23,"w"),(24,"x"),(25,"y"),(26,"z")]
+charsMin = L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(22,"v"),(23,"w"),(24,"x"),(25,"y"),(26,"z"),(27," ")]
 
 charsIzi :: ListeAssociative
 charsIzi = L [(0,"a"),(1,"b"),(2,"c")]
@@ -172,7 +204,7 @@ code :: [Int]
 code = [0,1,3,2,4,7,0,9,10,0]
 
 arbreChar :: Apref
-arbreChar = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[])),('d',3,(Apref [])),('e',4,(Apref [])),('f',5,(Apref[])),('g',6,(Apref [])),('h',7,(Apref [])),('i',8,(Apref[])),('j',9,(Apref [])),('k',10,(Apref [])),('l',11,(Apref[])),('m',12,(Apref [])),('n',13,(Apref [])),('o',14,(Apref[])),('p',15,(Apref [])),('q',16,(Apref [])),('r',17,(Apref[])),('s',18,(Apref [])),('t',19,(Apref [])),('u',20,(Apref[])),('v',21,(Apref [])),('w',22,(Apref [])),('x',23,(Apref[])),('y',24,(Apref [])),('z',25,(Apref []))]
+arbreChar = Apref [('a',0,(Apref [])),('b',1,(Apref [])),('c',2,(Apref[])),('d',3,(Apref [])),('e',4,(Apref [])),('f',5,(Apref[])),('g',6,(Apref [])),('h',7,(Apref [])),('i',8,(Apref[])),('j',9,(Apref [])),('k',10,(Apref [])),('l',11,(Apref[])),('m',12,(Apref [])),('n',13,(Apref [])),('o',14,(Apref[])),('p',15,(Apref [])),('q',16,(Apref [])),('r',17,(Apref[])),('s',18,(Apref [])),('t',19,(Apref [])),('u',20,(Apref[])),('v',21,(Apref [])),('w',22,(Apref [])),('x',23,(Apref[])),('y',24,(Apref [])),('z',25,(Apref [])),(' ',26,(Apref []))]
 
 --arbre3 :: Apref
 --arbre3 = Apref [(elements ['a'..'z'],elements [0..26],(Apref []))]
