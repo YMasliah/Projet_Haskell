@@ -23,10 +23,19 @@ La fonction `empty :: a` retourne soit une table vide soit une liste associative
     Apref []
 
 La fonction `ajouter :: a -> String -> a` fait que l'ajout d'un mot dans la table avec un code associe a cette chaine de caractere bien sure si il n'existe pas.
-  Pour la liste associative elle verifie si la table est vide donc elle ajoute le mot avec le code `0` sinon elle verifie si le mot en entree exsiste deja dans la table et si c'est pas le cas elle le rajoute a la fin de la liste avec le dernier code exsistant dans la table plus un.
-  Et pour l'arbre de prefixe on fait la meme verification de l'existance du mot avec la fonction `isIn` qu'on expliquera plus tard et si il n'exsiste pas 
+
+  Pour la liste associative elle verifie si la table est vide sinon elle verifie avec `isIn` si le mot en entree exsiste deja dans la table et si c'est pas le cas elle le rajoute a la liste.
+  Et pour l'arbre de prefixe on fait la meme verification de l'existance du mot et sinon  on appelle la fonction `nbnoeud` qui calcucule recurivement le nombre total des noueds de l'arbre pour connaitre le code du prochain noeud et ainsi le retourner et l'utiliser dans une autre fonction `ajouterR` qui
   
+      *Main> ajouter charsMin "zz"
+      L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(22,"v"),(23,"w"),(24,"x"),(25,"y"),(26,"z"),(27," "),(28,"zz")]
+      (0.01 secs, 0 bytes)
+      *Main> ajouter arbreChar "zz"
+      Apref [('a',0,Apref []),('b',1,Apref []),('c',2,Apref []),('d',3,Apref []),('e',4,Apref []),('f',5,Apref []),('g',6,Apref []),('h',7,Apref []),('i',8,Apref []),('j',9,Apref []),('k',10,Apref []),('l',11,Apref []),('m',12,Apref []),('n',13,Apref []),('o',14,Apref []),('p',15,Apref []),('q',16,Apref []),('r',17,Apref []),('s',18,Apref []),('t',19,Apref []),('u',20,Apref []),('v',21,Apref []),('w',22,Apref []),('x',23,Apref []),('y',24,Apref []),('z',25,Apref [('z',27,Apref [])]),(' ',26,Apref [])]
+      (0.01 secs, 0 bytes)
+
   
+  ajouter (L a) b =  if isIn (L a) b then (L a) else (L (a ++ [(fst(last a)+1,b)]))
   
   ajouter (Apref arbre) chaine = 
       if isIn (Apref arbre) chaine 
@@ -37,7 +46,10 @@ La fonction `ajouter :: a -> String -> a` fait que l'ajout d'un mot dans la tabl
 ************** la fonction ajouter de l'arbre avec l'information du code final en argument    
 ajouterR :: Apref -> String -> Code -> Apref
 ajouterR (Apref noeud) [lettre] code = (Apref (noeud ++ [(lettre,code,empty)]))
-ajouterR (Apref (branche:autres)) (char:chaine) code = if a == char then Apref ((a,b,(ajouterR c chaine code)):autres) else (Apref ([branche] ++ sousArbre))
+ajouterR (Apref (branche:autres)) (char:chaine) code = 
+    if a == char 
+        then Apref ((a,b,(ajouterR c chaine code)):autres) 
+        else (Apref ([branche] ++ sousArbre))
   where
   (Apref sousArbre) = ajouterR (Apref autres) (char:chaine) code
   (a,b,c) = branche 
