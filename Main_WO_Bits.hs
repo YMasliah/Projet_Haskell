@@ -17,7 +17,7 @@ class Table a where
 
 instance Table Apref where
   empty = (Apref []) 
-  ajouter (Apref arbre) chaine = ajouterR (Apref arbre) chaine code
+  ajouter (Apref arbre) chaine = if isIn (Apref arbre) chaine then (Apref arbre) else ajouterR (Apref arbre) chaine code 
     where
       code = nbnoeud (Apref arbre)
   codeOf (Apref []) _ = Nothing
@@ -61,10 +61,14 @@ nbnoeud (Apref (d:autres)) = 1 + nbnoeud c + nbnoeud (Apref autres)
 newtype ListeAssociative = L [(Code,String)]
                 deriving Show
 
+-- rajouter a la fonction ajouter si sa doit marcher comme l'arbre
+-- if isIn (L a) (init(b)) then
+-- else (L a)
+
 instance Table ListeAssociative where
   empty = (L []) 
   ajouter (L []) b = (L [(0,b)])
-  ajouter (L a) b = (L (a ++ [(fst(last a)+1,b)]))
+  ajouter (L a) b =  if isIn (L a) b then (L a) else (L (a ++ [(fst(last a)+1,b)])) 
   codeOf (L a) b = lookupbis b a
   stringOf (L a) b = lookup b a
   isIn (L a) b = if codeOf (L a) b == Nothing then False else True
