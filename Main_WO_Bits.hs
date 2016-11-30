@@ -37,6 +37,7 @@ instance Table Apref where
 -- chaque fois qu'il avance d'une profondeur dans l'arbre il enregistre la lettre qu'il y as dans le 3plet
 -- la fonction a une complexité tres eleve, n^3 surement. il doit y avoir une methode beaucoup plus rapide.
 -- Edit : V2 faite, c'est plus que n^2 je crois, maintenant il est plus rapide que la liste associative (test a la fin du fichier)
+
 stringOfR :: Apref -> Code -> String -> Maybe String
 stringOfR (Apref []) _ _ = Nothing
 stringOfR (Apref ((char,codebis,noeud):autres)) code string = if code == codebis then Just (string ++ [char]) else if isJust noeuds then noeuds else if isJust branches then branches else Nothing  
@@ -95,6 +96,7 @@ findIsInMax table (char:string) charIsIn = if isIn table word == True then findI
     word = (charIsIn ++ [char])
     
 lzwEncode :: Table a => a -> String -> [Code]
+lzwEncode _ [] = []
 lzwEncode table bdd = 
   if suffixe == [] 
     then [prefixCode]
@@ -103,6 +105,7 @@ lzwEncode table bdd =
     (prefix,Just prefixCode,suffixe) = split table bdd 
 
 lzwDecode :: Table a => a  -> [Code] -> String
+lzwDecode _ [] = []
 lzwDecode table (code:codes) = word ++ lzw_Decode table word codes
   where
     Just word = stringOf table code
@@ -120,7 +123,6 @@ lzw_Decode table prefix (code:codes) =
     currentWord = (prefix ++ [(head prefix)])
     currentTable = ajouter table currentWord
 
-
 stringToCode :: String -> [Code]
 stringToCode string = stringCodeToCode stringCodes
  where
@@ -135,39 +137,42 @@ stringCodeToCode (stringCode:stringCodes) = [code] ++ stringCodeToCode stringCod
   code = read stringCode :: Code
 
 -- Le main pour l'executable du Encode   
-main :: IO ()
+{-main :: IO ()
 main =  do
- putStrLn "Bonjour, entrez le String a encoder (alphabet en minuscule et les espaces)"
  string <- getLine
  let result = (lzwEncode arbreChar string)
  print result
+-}
 
-{-
 -- Le main pour l'executable du Decode
 main =  do
- putStrLn "Bonjour, entrez le String a decoder (alphabet en minuscule et les espaces)"
  string <- getLine
  let code = stringToCode string
  let result = (lzwDecode arbreChar code)
- print result
--}
+ putStrLn $ id result
+
+
+
+
 -- la zone de test 
 
-genSafeChar :: Gen Char
-genSafeChar = elements ['a'..'c']
-    
-genSafeString :: Gen String
-genSafeString = vectorOf 20 genSafeChar    
-    
-test :: ListeAssociative -> ListeAssociative 
-test (L a) = ajouter (ajouter (L a) "tata") "toto"
-{-
-grosTest :: ListeAssociative -> [Bool]
-grosTest (L a) = replicate 20 (if string == string2 then True else False) 
-  where
-    string = genSafeString
-    string2 = lzwDecode (L a) (lzwEncode (L a) string)
--}
+-- quickcheck
+
+deepcheck p = quickCheckWith stdArgs { maxSuccess = 20 ,maxSize = 1000} p
+
+arbreDico :: Apref 
+arbreDico = foldl ajouter (empty::Apref) $ map (\c -> [c]) (['\NUL'..'\255'])
+
+dicobis :: ListeAssociative 
+dicobis = foldl ajouter (empty::ListeAssociative) $ map (\c -> [c]) (['\NUL'..'\255'])
+
+dico :: ListeAssociative 
+dico = L [(i,[(toEnum i :: Char)])|i<-[0..255]]
+
+mytest = deepcheck ((\s -> (lzwDecode arbreDico (lzwEncode arbreDico s)) == s) :: [Char] -> Bool)
+beta1 = quickCheck ((\s -> last (lzwEncode dicobis s) > 0) :: [Char] -> Bool)
+
+-- sans quickcheck
 
 charsMaj :: ListeAssociative
 charsMaj = L [(0,"A"),(1,"B"),(2,"C"),(4,"D"),(5,"E"),(6,"F"),(7,"G"),(8,"H"),(9,"I"),(10,"J"),(11,"K"),(12,"L"),(13,"M"),(14,"N"),(15,"O"),(16,"P"),(17,"Q"),(18,"R"),(19,"S"),(20,"T"),(21,"U"),(22,"V"),(23,"W"),(24,"X"),(25,"Y"),(26,"Z"),(27," ")]
