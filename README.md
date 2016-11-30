@@ -8,7 +8,12 @@ Show what the library does as concisely as possible, developers should be able t
 
 ## Un peu de Code
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+         empty :: a 
+         ajouter :: a -> String -> a
+         codeOf :: a -> String -> Maybe Code
+         stringOf :: a -> Code -> Maybe String
+         isIn :: a -> String -> Bool
+         split :: a -> String -> (String,Maybe Code,String)
 
 ## Execution
 
