@@ -1,7 +1,7 @@
 ## Introduction
 
-Le but du projet est d'implementer l'algorithme de compression et de decompression de **Lempel-Ziv-Welch** avec differentes structures de donnes comme table de traduction, qui associe des chaines de caracetre a des codes (dans notre cas des entiers).
-Les deux structures que nous avons implementer sont les listes associatives et les arbres de prefixes, nous avons pas eu le temps pour l'instant de finir la partie avec les bits.
+  Le but du projet est d'implementer l'algorithme de compression et de decompression de **Lempel-Ziv-Welch** avec differentes structures de donnes comme table de traduction, qui associe des chaines de caracetre a des codes (dans notre cas des entiers).
+  Les deux structures que nous avons implementer sont les listes associatives et les arbres de prefixes, nous avons pas eu le temps pour l'instant de finir la partie avec les bits.
 
 ## Structuration du Projet
 
@@ -10,8 +10,8 @@ Les deux structures que nous avons implementer sont les listes associatives et l
                     README.md
                     lzwDecode
                     lzwEncode
-Un fichier `README.md` pour le rendu du projet ainsi que les etapes a suivre pour executer et tester les fonctionnalitees, les deux fichier executables `lzwEnCode` et `lzwDecode` sert a coder ou decoder un fichier.
-Et enfin le fichier principale `Main_WO_Bits.hs` qui contient les focntions et les ou on pourra tester notre travail.
+                    
+  Un fichier `README.md` pour le rendu du projet ainsi que les etapes a suivre pour executer et tester les fonctionnalitees, les deux fichier executables `lzwEnCode` et `lzwDecode` sert a coder ou decoder un fichier.Et enfin le fichier principale `Main_WO_Bits.hs` qui contient les focntions et les ou on pourra tester notre travail.
 
 ## Un peu de Code
 
@@ -41,7 +41,7 @@ Provide code examples and explanations of how to get the project.
         True
         (33.61 secs, 8,631,901,936 bytes)
         *Main> test18 arbreChar
-        True
+        True    
         (75.30 secs, 24,234,537,648 bytes)
         *Main> let a = lzwEncode arbreChar string20 in a==a
         True
