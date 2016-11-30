@@ -1,0 +1,120 @@
+	Wed Nov 30 14:44 2016 Time and Allocation Profiling Report  (Final)
+
+	   yann +RTS -p -RTS
+
+	total time  =        3.26 secs   (3260 ticks @ 1000 us, 1 processor)
+	total alloc = 4,280,420,000 bytes  (excludes profiling overheads)
+
+COST CENTRE        MODULE SRC                     %time %alloc
+
+nbnoeud            Main   yann.hs:(56,1)-(59,21)   65.0   75.6
+stringOfR          Main   yann.hs:(41,1)-(45,56)   13.7   10.7
+nbnoeud.c          Main   yann.hs:59:11-21         12.1    0.0
+codeOf             Main   yann.hs:(23,3)-(27,19)    3.7    5.0
+ajouterR           Main   yann.hs:(48,1)-(52,19)    1.5    1.9
+stringOfR.branches Main   yann.hs:44:9-55           1.2    1.9
+stringOfR.noeuds   Main   yann.hs:45:9-56           1.0    4.1
+
+
+                                                                                              individual      inherited
+COST CENTRE                 MODULE                SRC                      no.     entries  %time %alloc   %time %alloc
+
+MAIN                        MAIN                  <built-in>                47          0    0.0    0.0   100.0  100.0
+ CAF                        Main                  <entire-module>           93          0    0.0    0.0   100.0  100.0
+  arbreChar                 Main                  yann.hs:212:1-541        101          1    0.0    0.0     0.0    0.0
+  empty                     Main                  yann.hs:19:3-20          166          1    0.0    0.0     0.0    0.0
+  main                      Main                  yann.hs:139:1-41          94          1    0.0    0.0   100.0   99.9
+   test18                   Main                  yann.hs:271:1-59          95          1    0.1    0.0   100.0   99.9
+    lzwEncode               Main                  yann.hs:(98,1)-(103,54)   97       4509    0.1    0.1    47.9   41.3
+     lzwEncode.(...)        Main                  yann.hs:103:5-54          99       4509    0.0    0.0     3.4    4.5
+      split                 Main                  yann.hs:(30,3)-(34,47)   100       4509    0.1    0.0     3.4    4.5
+       split.prefix         Main                  yann.hs:32:11-54         104       4509    0.0    0.0     2.9    4.1
+        findIsInMax         Main                  yann.hs:(92,1)-(95,31)   105      43549    0.0    0.1     2.9    4.1
+         findIsInMax.word   Main                  yann.hs:95:5-31          117      43548    0.1    0.3     0.1    0.3
+         isIn               Main                  yann.hs:29:3-92          115      43548    0.1    0.0     2.8    3.6
+          codeOf            Main                  yann.hs:(23,3)-(27,19)   116     917306    2.3    3.6     2.7    3.6
+           codeOf.(...)     Main                  yann.hs:27:5-19          119     804324    0.0    0.0     0.0    0.0
+           codeOf.a         Main                  yann.hs:27:5-19          118     804324    0.4    0.0     0.4    0.0
+           codeOf.c         Main                  yann.hs:27:5-19          120     231939    0.0    0.0     0.0    0.0
+       split.prefixCode     Main                  yann.hs:33:11-50         102       4509    0.0    0.0     0.4    0.4
+        codeOf              Main                  yann.hs:(23,3)-(27,19)   103     107622    0.3    0.4     0.4    0.4
+         codeOf.(...)       Main                  yann.hs:27:5-19          170     100280    0.0    0.0     0.0    0.0
+         codeOf.a           Main                  yann.hs:27:5-19          169     100280    0.0    0.0     0.0    0.0
+         codeOf.c           Main                  yann.hs:27:5-19          171      34531    0.0    0.0     0.0    0.0
+       split.suffixe        Main                  yann.hs:34:11-47         121       4509    0.0    0.0     0.0    0.0
+     lzwEncode.prefixCode   Main                  yann.hs:103:5-54         126       4509    0.0    0.0     0.0    0.0
+     lzwEncode.suffixe      Main                  yann.hs:103:5-54          98       4509    0.0    0.0     0.0    0.0
+     ajouter                Main                  yann.hs:(20,3)-(22,34)   130       4508    0.1    0.0    44.3   36.7
+      ajouterR              Main                  yann.hs:(48,1)-(52,19)   137     111688    0.6    0.9     0.7    1.0
+       ajouterR.(...)       Main                  yann.hs:52:3-19          139     107201    0.0    0.0     0.0    0.0
+       ajouterR.a           Main                  yann.hs:52:3-19          138     107201    0.0    0.0     0.0    0.0
+       ajouterR.(...)       Main                  yann.hs:51:3-64          141      68471    0.0    0.1     0.0    0.1
+       ajouterR.sousArbre   Main                  yann.hs:51:3-64          140      68471    0.0    0.0     0.0    0.0
+       ajouterR.c           Main                  yann.hs:52:3-19          167      38709    0.1    0.0     0.1    0.0
+       ajouterR.b           Main                  yann.hs:52:3-19          168        736    0.0    0.0     0.0    0.0
+      isIn                  Main                  yann.hs:29:3-92          131       4508    0.0    0.0     0.6    0.5
+       codeOf               Main                  yann.hs:(23,3)-(27,19)   132     112953    0.5    0.5     0.6    0.5
+        codeOf.(...)        Main                  yann.hs:27:5-19          135     107593    0.0    0.0     0.0    0.0
+        codeOf.a            Main                  yann.hs:27:5-19          134     107593    0.0    0.0     0.0    0.0
+        codeOf.c            Main                  yann.hs:27:5-19          136      39037    0.1    0.0     0.1    0.0
+      ajouter.code          Main                  yann.hs:22:7-34          172       4203    0.0    0.0    42.9   35.2
+       nbnoeud              Main                  yann.hs:(56,1)-(59,21)   173   17961943   35.0   35.2    42.9   35.2
+        nbnoeud.(...)       Main                  yann.hs:59:11-21         175    8978870    0.0    0.0     0.0    0.0
+        nbnoeud.c           Main                  yann.hs:59:11-21         174    8978870    7.9    0.0     7.9    0.0
+     lzwEncode.prefix       Main                  yann.hs:103:5-54         133       4508    0.0    0.0     0.0    0.0
+    lzwDecode               Main                  yann.hs:(106,1)-(108,35)  96          1    0.0    0.0    52.0   58.6
+     lzw_Decode             Main                  yann.hs:(111,1)-(121,44) 129       4509    0.0    0.1    52.0   58.6
+      lzw_Decode.newWord    Main                  yann.hs:118:5-31         147       4508    0.0    0.0     0.0    0.0
+      lzw_Decode.wordTemp   Main                  yann.hs:117:5-34         142       4508    0.0    0.0    15.9   16.7
+       stringOf             Main                  yann.hs:28:3-55          143       4508    0.0    0.0    15.9   16.7
+        stringOfR           Main                  yann.hs:(41,1)-(45,56)   144   10287407   13.7   10.7    15.9   16.7
+         stringOfR.noeuds   Main                  yann.hs:45:9-56          145    5158715    1.0    4.1     1.0    4.1
+         stringOfR.branches Main                  yann.hs:44:9-55          146    5124184    1.2    1.9     1.2    1.9
+      lzw_Decode.newTable   Main                  yann.hs:119:5-57         148       4507    0.0    0.1    36.1   41.9
+       ajouter              Main                  yann.hs:(20,3)-(22,34)   149       4507    0.0    0.0    36.1   41.8
+        ajouterR            Main                  yann.hs:(48,1)-(52,19)   155     112070    0.8    0.9     1.1    1.0
+         ajouterR.(...)     Main                  yann.hs:52:3-19          157     107563    0.0    0.0     0.0    0.0
+         ajouterR.a         Main                  yann.hs:52:3-19          156     107563    0.2    0.0     0.2    0.0
+         ajouterR.(...)     Main                  yann.hs:51:3-64          159      68540    0.0    0.1     0.0    0.1
+         ajouterR.sousArbre Main                  yann.hs:51:3-64          158      68540    0.0    0.0     0.0    0.0
+         ajouterR.c         Main                  yann.hs:52:3-19          161      39023    0.0    0.0     0.0    0.0
+         ajouterR.b         Main                  yann.hs:52:3-19          160      39008    0.1    0.0     0.1    0.0
+        isIn                Main                  yann.hs:29:3-92          150       4507    0.0    0.0     0.7    0.5
+         codeOf             Main                  yann.hs:(23,3)-(27,19)   151     112922    0.6    0.5     0.7    0.5
+          codeOf.(...)      Main                  yann.hs:27:5-19          153     107563    0.0    0.0     0.0    0.0
+          codeOf.a          Main                  yann.hs:27:5-19          152     107563    0.1    0.0     0.1    0.0
+          codeOf.c          Main                  yann.hs:27:5-19          154      39023    0.0    0.0     0.0    0.0
+        ajouter.code        Main                  yann.hs:22:7-34          162       4506    0.0    0.0    34.2   40.3
+         nbnoeud            Main                  yann.hs:(56,1)-(59,21)   163   20547368   30.0   40.3    34.2   40.3
+          nbnoeud.(...)     Main                  yann.hs:59:11-21         165   10271431    0.0    0.0     0.0    0.0
+          nbnoeud.c         Main                  yann.hs:59:11-21         164   10271431    4.2    0.0     4.2    0.0
+     lzwDecode.(...)        Main                  yann.hs:108:5-35         123          1    0.0    0.0     0.0    0.0
+      stringOf              Main                  yann.hs:28:3-55          124          1    0.0    0.0     0.0    0.0
+       stringOfR            Main                  yann.hs:(41,1)-(45,56)   125          3    0.0    0.0     0.0    0.0
+        stringOfR.branches  Main                  yann.hs:44:9-55          128          1    0.0    0.0     0.0    0.0
+        stringOfR.noeuds    Main                  yann.hs:45:9-56          127          1    0.0    0.0     0.0    0.0
+     lzwDecode.word         Main                  yann.hs:108:5-35         122          1    0.0    0.0     0.0    0.0
+  string1                   Main                  yann.hs:182:1-40         114          1    0.0    0.0     0.0    0.0
+  string10                  Main                  yann.hs:191:1-34         184          1    0.0    0.0     0.0    0.0
+  string11                  Main                  yann.hs:192:1-120        113          1    0.0    0.0     0.0    0.0
+  string12                  Main                  yann.hs:193:1-31         112          1    0.0    0.0     0.0    0.0
+  string13                  Main                  yann.hs:194:1-31         111          1    0.0    0.0     0.0    0.0
+  string14                  Main                  yann.hs:195:1-31         110          1    0.0    0.0     0.0    0.0
+  string15                  Main                  yann.hs:196:1-31         109          1    0.0    0.0     0.0    0.0
+  string16                  Main                  yann.hs:197:1-31         108          1    0.0    0.0     0.0    0.0
+  string17                  Main                  yann.hs:198:1-31         107          1    0.0    0.0     0.0    0.0
+  string18                  Main                  yann.hs:199:1-31         106          1    0.0    0.0     0.0    0.0
+  string2                   Main                  yann.hs:183:1-41         176          1    0.0    0.0     0.0    0.0
+  string3                   Main                  yann.hs:184:1-43         177          1    0.0    0.0     0.0    0.0
+  string4                   Main                  yann.hs:185:1-32         178          1    0.0    0.0     0.0    0.0
+  string5                   Main                  yann.hs:186:1-43         179          1    0.0    0.0     0.0    0.0
+  string6                   Main                  yann.hs:187:1-48         180          1    0.0    0.0     0.0    0.0
+  string7                   Main                  yann.hs:188:1-49         181          1    0.0    0.0     0.0    0.0
+  string8                   Main                  yann.hs:189:1-48         182          1    0.0    0.0     0.0    0.0
+  string9                   Main                  yann.hs:190:1-48         183          1    0.0    0.0     0.0    0.0
+ CAF                        GHC.Conc.Signal       <entire-module>           88          0    0.0    0.0     0.0    0.0
+ CAF                        GHC.IO.Encoding       <entire-module>           82          0    0.0    0.0     0.0    0.0
+ CAF                        GHC.IO.Encoding.Iconv <entire-module>           80          0    0.0    0.0     0.0    0.0
+ CAF                        GHC.IO.Handle.FD      <entire-module>           72          0    0.0    0.0     0.0    0.0
+ CAF                        GHC.IO.Handle.Text    <entire-module>           70          0    0.0    0.0     0.0    0.0
+ CAF                        GHC.Show              <entire-module>           67          0    0.0    0.0     0.0    0.0
