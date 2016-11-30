@@ -15,14 +15,48 @@
 
 ## Un peu de Code
 
-`empty :: a` -> elle retourne soit une table vide soit une liste associative soit un arbe de prefixe vide.
+La fonction `empty :: a` retourne soit une table vide soit une liste associative soit un arbe de prefixe vide.
 
     *Main> empty :: ListeAssociative 
     L []
     *Main> empty :: Apref 
     Apref []
 
-`ajouter :: a -> String -> a`
+La fonction `ajouter :: a -> String -> a` fait que l'ajout d'un mot dans la table avec un code associe a cette chaine de caractere bien sure si il n'existe pas.
+  Pour la liste associative elle verifie si la table est vide donc elle ajoute le mot avec le code `0` sinon elle verifie si le mot en entree exsiste deja dans la table et si c'est pas le cas elle le rajoute a la fin de la liste avec le dernier code exsistant dans la table plus un.
+  Et pour l'arbre de prefixe on fait la meme verification de l'existance du mot avec la fonction `isIn` qu'on expliquera plus tard et si il n'exsiste pas 
+  
+  
+  
+  ajouter (Apref arbre) chaine = 
+      if isIn (Apref arbre) chaine 
+        then (Apref arbre) 
+        else ajouterR (Apref arbre) chaine code 
+    where
+      code = nbnoeud (Apref arbre)
+************** la fonction ajouter de l'arbre avec l'information du code final en argument    
+ajouterR :: Apref -> String -> Code -> Apref
+ajouterR (Apref noeud) [lettre] code = (Apref (noeud ++ [(lettre,code,empty)]))
+ajouterR (Apref (branche:autres)) (char:chaine) code = if a == char then Apref ((a,b,(ajouterR c chaine code)):autres) else (Apref ([branche] ++ sousArbre))
+  where
+  (Apref sousArbre) = ajouterR (Apref autres) (char:chaine) code
+  (a,b,c) = branche 
+  
+************ fonction qui compte le nombre de noeud dans l'arbre pour connaitre le code du prochain noeud
+nbnoeud :: Apref -> Code 
+nbnoeud (Apref []) = 0
+nbnoeud (Apref (d:autres)) = 1 + nbnoeud c + nbnoeud (Apref autres)
+    where
+          (a,b,c) = d   
+  
+  **
+
+      *Main> ajouter listeSimple "a"
+      L [(0,"a"),(1,"b"),(2,"c")]
+      *Main> ajouter listeSimple "d"
+      L [(0,"a"),(1,"b"),(2,"c"),(3,"d")]
+      *Main> ajouter arbreSimple "d"
+      Apref [('a',0,Apref []),('b',1,Apref []),('c',2,Apref []),('d',3,Apref [])]
 
 `codeOf :: a -> String -> Maybe Code`
 
