@@ -25,7 +25,8 @@ La fonction `empty :: a` retourne soit une table vide soit une liste associative
 La fonction `ajouter :: a -> String -> a` fait que l'ajout d'un mot dans la table avec un code associe a cette chaine de caractere bien sure si il n'existe pas.
 
   Pour la liste associative elle verifie si la table est vide sinon elle verifie avec `isIn` si le mot en entree exsiste deja dans la table et si c'est pas le cas elle le rajoute a la liste.
-  Et pour l'arbre de prefixe on fait la meme verification de l'existance du mot et sinon  on appelle la fonction `nbnoeud` qui calcucule recurivement le nombre total des noueds de l'arbre pour connaitre le code du prochain noeud et ainsi le retourner et l'utiliser dans une autre fonction `ajouterR` qui
+  
+  Et pour l'arbre de prefixe on fait la meme verification de l'existance du mot et sinon  on appelle la fonction `nbnoeud` qui calcucule recurivement le nombre total des noueds de l'arbre pour connaitre le code du prochain noeud et ainsi le retourner et l'utiliser dans une autre fonction recursive `ajouterR` qui cherche le premier caractere dans l'arbre et des qu'elle trouve le noeud qui le contient elle cree un nouvel arbre avec le reste de la chaine et ainsi de suite jusqu'a sque le reste de la chaine soit vide, chauqe nouveau noeud creer contient le code calculer avec `nbnoeud`. 
   
       *Main> ajouter charsMin "zz"
       L [(0,"a"),(1,"b"),(2,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l"),(13,"m"),(14,"n"),(15,"o"),(16,"p"),(17,"q"),(18,"r"),(19,"s"),(20,"t"),(21,"u"),(22,"v"),(23,"w"),(24,"x"),(25,"y"),(26,"z"),(27," "),(28,"zz")]
@@ -34,51 +35,24 @@ La fonction `ajouter :: a -> String -> a` fait que l'ajout d'un mot dans la tabl
       Apref [('a',0,Apref []),('b',1,Apref []),('c',2,Apref []),('d',3,Apref []),('e',4,Apref []),('f',5,Apref []),('g',6,Apref []),('h',7,Apref []),('i',8,Apref []),('j',9,Apref []),('k',10,Apref []),('l',11,Apref []),('m',12,Apref []),('n',13,Apref []),('o',14,Apref []),('p',15,Apref []),('q',16,Apref []),('r',17,Apref []),('s',18,Apref []),('t',19,Apref []),('u',20,Apref []),('v',21,Apref []),('w',22,Apref []),('x',23,Apref []),('y',24,Apref []),('z',25,Apref [('z',27,Apref [])]),(' ',26,Apref [])]
       (0.01 secs, 0 bytes)
 
-  
-  ajouter (L a) b =  if isIn (L a) b then (L a) else (L (a ++ [(fst(last a)+1,b)]))
-  
-  ajouter (Apref arbre) chaine = 
-      if isIn (Apref arbre) chaine 
-        then (Apref arbre) 
-        else ajouterR (Apref arbre) chaine code 
-    where
-      code = nbnoeud (Apref arbre)
-************** la fonction ajouter de l'arbre avec l'information du code final en argument    
-ajouterR :: Apref -> String -> Code -> Apref
-ajouterR (Apref noeud) [lettre] code = (Apref (noeud ++ [(lettre,code,empty)]))
-ajouterR (Apref (branche:autres)) (char:chaine) code = 
-    if a == char 
-        then Apref ((a,b,(ajouterR c chaine code)):autres) 
-        else (Apref ([branche] ++ sousArbre))
-  where
-  (Apref sousArbre) = ajouterR (Apref autres) (char:chaine) code
-  (a,b,c) = branche 
-  
-************ fonction qui compte le nombre de noeud dans l'arbre pour connaitre le code du prochain noeud
-nbnoeud :: Apref -> Code 
-nbnoeud (Apref []) = 0
-nbnoeud (Apref (d:autres)) = 1 + nbnoeud c + nbnoeud (Apref autres)
-    where
-          (a,b,c) = d   
-  
-  **
+La fonction `codeOf :: a -> String -> Maybe Code` qui retourne le code d'un mot est implementer pour la liste associative on utilisant le meme principe de `lookup` c-a-d chercher par recursivite le mot et retourner le code associe.
 
-      *Main> ajouter listeSimple "a"
-      L [(0,"a"),(1,"b"),(2,"c")]
-      *Main> ajouter listeSimple "d"
-      L [(0,"a"),(1,"b"),(2,"c"),(3,"d")]
-      *Main> ajouter arbreSimple "d"
-      Apref [('a',0,Apref []),('b',1,Apref []),('c',2,Apref []),('d',3,Apref [])]
+  Pour les arbres
 
-`codeOf :: a -> String -> Maybe Code`
+      *Main> codeOf charsMin "z"
+      Just 26
+      (0.00 secs, 0 bytes)
+      *Main> codeOf arbreChar "z"
+      Just 25
+      (0.00 secs, 0 bytes)
 
-`stringOf :: a -> Code -> Maybe String`
+La fonction `stringOf :: a -> Code -> Maybe String`
 
-`isIn :: a -> String -> Bool`
+La fonction `isIn :: a -> String -> Bool`
 
-`split :: a -> String -> (String,Maybe Code,String)` 
+La fonction `split :: a -> String -> (String,Maybe Code,String)` 
 
-## Execution
+## Compression et decompression
 
 **Compression**
   On démarre avec une table contenant tous les caractères individuellement, avec leurs traductions. On parcourt
