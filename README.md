@@ -15,12 +15,22 @@
 
 ## Un peu de Code
 
-         empty :: a 
-         ajouter :: a -> String -> a
-         codeOf :: a -> String -> Maybe Code
-         stringOf :: a -> Code -> Maybe String
-         isIn :: a -> String -> Bool
-         split :: a -> String -> (String,Maybe Code,String)
+`empty :: a` -> elle retourne soit une table vide soit une liste associative soit un arbe de prefixe vide.
+
+    *Main> empty :: ListeAssociative 
+    L []
+    *Main> empty :: Apref 
+    Apref []
+
+`ajouter :: a -> String -> a`
+
+`codeOf :: a -> String -> Maybe Code`
+
+`stringOf :: a -> Code -> Maybe String`
+
+`isIn :: a -> String -> Bool`
+
+`split :: a -> String -> (String,Maybe Code,String)` 
 
 ## Execution
 
@@ -29,6 +39,7 @@
 un flux de caractères, en lisant dans le flux, le plus long préfixe w contenu dans la table. On écrit alors en
 sortie le code de ce préfixe. Si le flux n’est pas terminé, on itère, mais auparavant on ajoute à la table le mot
 wc (avec un nouveau code), où c est le prochain caractère du flux.
+
 **Décompression**
   On s’aperçoit qu’on peut décompresser un flux de codes en reconstruisant la table de traduction à fur
 et mesure. On démarre avec la table contenant tous les caractères (et leur code associé), comme pour la
