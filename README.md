@@ -24,7 +24,27 @@
 
 ## Execution
 
-Provide code examples and explanations of how to get the project.
+**Compression**
+  On démarre avec une table contenant tous les caractères individuellement, avec leurs traductions. On parcourt
+un flux de caractères, en lisant dans le flux, le plus long préfixe w contenu dans la table. On écrit alors en
+sortie le code de ce préfixe. Si le flux n’est pas terminé, on itère, mais auparavant on ajoute à la table le mot
+wc (avec un nouveau code), où c est le prochain caractère du flux.
+**Décompression**
+  On s’aperçoit qu’on peut décompresser un flux de codes en reconstruisant la table de traduction à fur
+et mesure. On démarre avec la table contenant tous les caractères (et leur code associé), comme pour la
+compression.
+  Quand on lit un code du flux, on cherche son image inverse dans la table, c’est-à-dire la chaîne auquel ce
+code est attribué, et on produit cette chaîne comme résultat partiel. On itère avec le reste du flux, mais en se
+rappelant que la construction du flux de codes a étendu la table de traduction en ajoutant la correspondance
+entre ce mot et le premier caractère du décodage du prochain code à venir.
+  Il se pose un problème, car en principe nous ne savons pas décoder le prochain code (qui pourrait ne pas être
+un le code d’un mot dans la table).
+
+    lzwEncode :: Table a => a -> String -> [Code]
+
+    lzwDecode :: Table a => a  -> [Code] -> String
+
+    lzw_Decode :: Table a => a  -> String -> [Code] -> String
 
 ## Testes
 
