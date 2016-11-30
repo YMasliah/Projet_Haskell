@@ -153,3 +153,11 @@ Pour finir les commandes d'execution pour les fichiers `lzwCompress` et `lzwDeco
 
     $ ./lzwCompress < texte.txt >> code.txt
     $ ./lzwDecompress < code.txt >> texte.txt
+	
+## Compilation
+Commenter le bon Main dans le fichier et faire 
+ghc -o lzwCompress Main_WO_Bits.hs
+ou
+ghc -o lzwDecompress Main_WO_Bits.hs
+
+
