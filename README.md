@@ -1,4 +1,4 @@
-écrivez ici..## Introduction
+## Introduction
 
   Le but du projet est d’implémenter l'algorithme de compression et de décompression de **Lempel-Ziv-Welch** avec différentes structures de donnes comme table de traduction, qui associe des chaines de caractère a des codes (dans notre cas des entiers).
   Les deux structures que nous avons implémenter sont les listes associatives et les arbres de préfixes, nous avons pas eu le temps pour l'instant de finir la partie avec les bits.
