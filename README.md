@@ -5,11 +5,13 @@ Les deux structures que nous avons implementer sont les listes associatives et l
 
 ## Structuration du Projet
 
-          /Projet_Haskell
-                 README.md
-                 vendor
-                 web
-                 composer.json
+          \Projet_Haskell
+                    Main_WO_Bits.hs
+                    README.md
+                    lzwDecode
+                    lzwEncode
+Un fichier `README.md` pour le rendu du projet ainsi que les etapes a suivre pour executer et tester les fonctionnalitees, les deux fichier executables `lzwEnCode` et `lzwDecode` sert a coder ou decoder un fichier.
+Et enfin le fichier principale `Main_WO_Bits.hs` qui contient les focntions et les ou on pourra tester notre travail.
 
 ## Un peu de Code
 
