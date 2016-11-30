@@ -20,7 +20,7 @@ Depending on the size of the project, if it is small and simple enough the refer
 
 
 
-dico :: ListeAssociative
-dico = L [(i,[(toEnum i :: Char)])|i<-[0..255]]
+    dico :: ListeAssociative
+    dico = L [(i,[(toEnum i :: Char)])|i<-[0..255]]
 
-mytest = quickCheck ((\s -> (lzwDecode dico (lzwEncode dico s)) == s) :: [Char] -> Bool)
+    mytest = quickCheck ((\s -> (lzwDecode dico (lzwEncode dico s)) == s) :: [Char] -> Bool)
