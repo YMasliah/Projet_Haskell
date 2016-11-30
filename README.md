@@ -35,41 +35,36 @@ La fonction `ajouter :: a -> String -> a` fait que l'ajout d'un mot dans la tabl
       Apref [('a',0,Apref []),('b',1,Apref []),('c',2,Apref []),('d',3,Apref []),('e',4,Apref []),('f',5,Apref []),('g',6,Apref []),('h',7,Apref []),('i',8,Apref []),('j',9,Apref []),('k',10,Apref []),('l',11,Apref []),('m',12,Apref []),('n',13,Apref []),('o',14,Apref []),('p',15,Apref []),('q',16,Apref []),('r',17,Apref []),('s',18,Apref []),('t',19,Apref []),('u',20,Apref []),('v',21,Apref []),('w',22,Apref []),('x',23,Apref []),('y',24,Apref []),('z',25,Apref [('z',27,Apref [])]),(' ',26,Apref [])]
       (0.01 secs, 0 bytes)
 
-La fonction `codeOf :: a -> String -> Maybe Code` qui retourne le code d'un mot est implementer pour la liste associative on utilisant le meme principe de `lookup` c-a-d chercher par recursivite le mot et retourner le code associe.
+La fonction `codeOf :: a -> String -> Maybe Code` qui retourne le code d'un mot est implementer pour la liste associative on utilisant le meme principe de `lookup` c-a-d chercher par recursivite le mot et retourner le code associe. Pour les arbres la fonction fait un parcours recursif jusqu'a trouver le bon carcatere et elle renvoye le code associer.
 
-  Pour les arbres
+        *Main> codeOf charsMin "z"
+        Just 25
+        (0.00 secs, 0 bytes)
+        *Main> codeOf arbreChar "z"
+        Just 25
+        (0.00 secs, 0 bytes)
 
-      *Main> codeOf charsMin "z"
-      Just 26
-      (0.00 secs, 0 bytes)
-      *Main> codeOf arbreChar "z"
-      Just 25
-      (0.00 secs, 0 bytes)
+La fonction `stringOf :: a -> Code -> Maybe String` focntionne du principe inverse de `codeOf`, donc pour la liste elle fait juste un `lookup` du mot dans la liste. ainsi pour les arbres on parcours les noeuds tant qu'on trouve le bon caractere et on le concatene avec le suivant si il est toujours egale au caractere suivant du mot.
 
-La fonction `stringOf :: a -> Code -> Maybe String`
+    *Main> stringOf arbreChar 2
+    Just "c"
+    (0.01 secs, 0 bytes)
+    *Main> stringOf charsMin  2
+    Just "c"
+    (0.00 secs, 0 bytes)
 
-La fonction `isIn :: a -> String -> Bool`
+Pour la fonction `isIn :: a -> String -> Bool` on a utiliser la fonction precedante `codeOf` et ainsi si la reponse est `Nothing` donc le mot rechercher n'existe pas dans la table mais sinon il a trouve.
+
+    *Main> isIn arbreChar "z"
+    True
+    (0.00 secs, 0 bytes)
+    *Main> isIn charsMin  "z"
+    True
+    (0.00 secs, 0 bytes)
 
 La fonction `split :: a -> String -> (String,Maybe Code,String)` 
 
 ## Compression et decompression
-
-**Compression**
-  On démarre avec une table contenant tous les caractères individuellement, avec leurs traductions. On parcourt
-un flux de caractères, en lisant dans le flux, le plus long préfixe w contenu dans la table. On écrit alors en
-sortie le code de ce préfixe. Si le flux n’est pas terminé, on itère, mais auparavant on ajoute à la table le mot
-wc (avec un nouveau code), où c est le prochain caractère du flux.
-
-**Décompression**
-  On s’aperçoit qu’on peut décompresser un flux de codes en reconstruisant la table de traduction à fur
-et mesure. On démarre avec la table contenant tous les caractères (et leur code associé), comme pour la
-compression.
-  Quand on lit un code du flux, on cherche son image inverse dans la table, c’est-à-dire la chaîne auquel ce
-code est attribué, et on produit cette chaîne comme résultat partiel. On itère avec le reste du flux, mais en se
-rappelant que la construction du flux de codes a étendu la table de traduction en ajoutant la correspondance
-entre ce mot et le premier caractère du décodage du prochain code à venir.
-  Il se pose un problème, car en principe nous ne savons pas décoder le prochain code (qui pourrait ne pas être
-un le code d’un mot dans la table).
 
     lzwEncode :: Table a => a -> String -> [Code]
 
