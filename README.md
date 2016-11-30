@@ -59,6 +59,8 @@ La fonction `split :: a -> String -> (String,Maybe Code,String)` a le meme princ
 
 ## Compression et decompression
 
+On utilisant toutes les fonctions et les implementants dans lzwEncode et lzwDecode nous pouvons faires des testes variees et differents mais on montre les plus important :
+
         *Main> let a = lzwEncode charsMin string18 in a==a
         True
         (32.14 secs, 8,048,460,088 bytes)
@@ -75,9 +77,23 @@ La fonction `split :: a -> String -> (String,Maybe Code,String)` a le meme princ
 
 D'apres ces deux testes on remarques que la structure des arbres permet une execution plus rapide que celle des listes.
 
-Et du coup si on veut faire des testes sur la validite de la compression et la decompression on aura le resultat suivant :
+    arbreDico :: Apref 
+    arbreDico = foldl ajouter (empty::Apref) $ map (\c -> [c]) (['\NUL'..'\255'])
 
+    dicobis :: ListeAssociative 
+    dicobis = foldl ajouter (empty::ListeAssociative) $ map (\c -> [c]) (['\NUL'..'\255'])
 
+    deepcheck p = quickCheckWith stdArgs { maxSuccess = 20 ,maxSize = 1000} p
+
+    testGlobal1 = deepcheck ((\s -> (lzwDecode arbreDico (lzwEncode arbreDico s)) == s) :: [Char] -> Bool)
+    testGlobal2 = deepcheck ((\s -> (lzwDecode dicobis (lzwEncode dicobis s)) == s) :: [Char] -> Bool)
+
+Et du coup si on veut faire les 20 testes sur la validite de la compression et la decompression avec quickCheck on aura le resultat suivant :
+
+    *Main> testGlobal1
+    +++ OK, passed 20 tests.
+    *Main> testGlobal2
+    +++ OK, passed 20 tests.
 
 ## Testes
 
@@ -85,8 +101,6 @@ Et du coup si on veut faire des testes sur la validite de la compression et la d
 Voici des test des 2 types, nous pouvons voir que l'encodage est beaucoup plus rapide avec l'arbre et beaucoup plus lent en decodage (par rapport a la liste associative)
 
 Pour les testes nous avons definis deux tables (charsMin et AarbreChars) contenant l'alphabet avec leur code, ainsi que des string aleatoire.
-
-
 
         *Main> test16 charsMin 
         True
@@ -108,10 +122,11 @@ Pour les testes nous avons definis deux tables (charsMin et AarbreChars) contena
         *Main> test20 charsMin
         True
         (254.38 secs, 63,607,594,816 bytes)
+        
 
+## Execution
 
+Pour finir les commandes d'execution pour les fichiers `lzwCompress` et `lzwDeCompress` sont :
 
-    dico :: ListeAssociative
-    dico = L [(i,[(toEnum i :: Char)])|i<-[0..255]]
-
-    mytest = quickCheck ((\s -> (lzwDecode dico (lzwEncode dico s)) == s) :: [Char] -> Bool)
+    $ ./lzwCompress < texte.txt >> code.txt
+    $ ./lzwDecompress < code.txt >> texte.txt
