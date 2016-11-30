@@ -59,26 +59,6 @@ La fonction `split :: a -> String -> (String,Maybe Code,String)` a le meme princ
 
 ## Compression et decompression
 
-La compresssion se fait par la fonction suivante :
-
-    lzwEncode :: Table a => a -> String -> [Code]
-
-Son principe est de 
-
-Pour la decompression nous utilisant les deux fonctions suivantes :
-
-    lzwDecode :: Table a => a  -> [Code] -> String
-    lzw_Decode :: Table a => a  -> String -> [Code] -> String
-
-Son principe est de
-
-## Testes
-
-**Remarques**A partir du `test19` sa commence a etre tres long pour la liste associative.
-Voici des test des 2 types, nous pouvons voir que l'encodage est beaucoup plus rapide avec l'arbre et beaucoup plus lent en decodage (par rapport a la liste associative)
-
-Pour les testes nous avons definis deux tables (charsMin et AarbreChars) contenant l'alphabet avec leur code, ainsi que des string aleatoire.
-
         *Main> let a = lzwEncode charsMin string18 in a==a
         True
         (32.14 secs, 8,048,460,088 bytes)
@@ -94,6 +74,19 @@ Pour les testes nous avons definis deux tables (charsMin et AarbreChars) contena
         (56.08 secs, 19,658,114,232 bytes)
 
 D'apres ces deux testes on remarques que la structure des arbres permet une execution plus rapide que celle des listes.
+
+Et du coup si on veut faire des testes sur la validite de la compression et la decompression on aura le resultat suivant :
+
+
+
+## Testes
+
+**Remarques**A partir du `test19` sa commence a etre tres long pour la liste associative.
+Voici des test des 2 types, nous pouvons voir que l'encodage est beaucoup plus rapide avec l'arbre et beaucoup plus lent en decodage (par rapport a la liste associative)
+
+Pour les testes nous avons definis deux tables (charsMin et AarbreChars) contenant l'alphabet avec leur code, ainsi que des string aleatoire.
+
+
 
         *Main> test16 charsMin 
         True
