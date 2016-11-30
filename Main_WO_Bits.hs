@@ -140,7 +140,7 @@ stringCodeToCode (stringCode:stringCodes) = [code] ++ stringCodeToCode stringCod
 main :: IO ()
 main =  do
  string <- getLine
- let result = (lzwEncode arbreChar string)
+ let result = (lzwEncode arbreDico string)
  print result
 
 {-
@@ -148,12 +148,9 @@ main =  do
 main =  do
  string <- getLine
  let code = stringToCode string
- let result = (lzwDecode arbreChar code)
+ let result = (lzwDecode arbreDico code)
  putStrLn $ id result
 -}
-
-
-
 -- la zone de test 
 
 -- quickcheck
