@@ -55,27 +55,29 @@ La fonction `stringOf :: a -> Code -> Maybe String` focntionne du principe inver
 
 Pour la fonction `isIn :: a -> String -> Bool` on a utiliser la fonction precedante `codeOf` et ainsi si la reponse est `Nothing` donc le mot rechercher n'existe pas dans la table mais sinon il a trouve.
 
-    *Main> isIn arbreChar "z"
-    True
-    (0.00 secs, 0 bytes)
-    *Main> isIn charsMin  "z"
-    True
-    (0.00 secs, 0 bytes)
-
-La fonction `split :: a -> String -> (String,Maybe Code,String)` 
+La fonction `split :: a -> String -> (String,Maybe Code,String)` a le meme principe pour les listes et pour les arbres c-a-d qu'on utilise une fonction polymorphe `findIsInMax` qu'on a implementer et qui cherche a chaque fois le prefixe du mot en entree et tant qui le trouve il le sauvegrade et il passe au prefixe + le prochaine caractere.
 
 ## Compression et decompression
 
+La compresssion se fait par la fonction suivante :
+
     lzwEncode :: Table a => a -> String -> [Code]
 
-    lzwDecode :: Table a => a  -> [Code] -> String
+Son principe est de 
 
+Pour la decompression nous utilisant les deux fonctions suivantes :
+
+    lzwDecode :: Table a => a  -> [Code] -> String
     lzw_Decode :: Table a => a  -> String -> [Code] -> String
+
+Son principe est de
 
 ## Testes
 
--- a partir du test 19 sa commence a etre tres long pour la liste associative
-{- voici des test des 2 types, nous pouvons voir que l'encodage est beaucoup plus rapide avec l'arbre et beaucoup plus lent en decodage (par rapport a la liste associative)
+**Remarques**A partir du `test19` sa commence a etre tres long pour la liste associative.
+Voici des test des 2 types, nous pouvons voir que l'encodage est beaucoup plus rapide avec l'arbre et beaucoup plus lent en decodage (par rapport a la liste associative)
+
+Pour les testes nous avons definis deux tables (charsMin et AarbreChars) contenant l'alphabet avec leur code, ainsi que des string aleatoire.
 
         *Main> let a = lzwEncode charsMin string18 in a==a
         True
@@ -83,33 +85,36 @@ La fonction `split :: a -> String -> (String,Maybe Code,String)`
         *Main> let a = lzwEncode arbreChar string18 in a==a
         True
         (12.12 secs, 4,300,215,536 bytes)
-        *Main> test18 charsMin
-        True
-        (33.61 secs, 8,631,901,936 bytes)
-        *Main> test18 arbreChar
-        True    
-        (75.30 secs, 24,234,537,648 bytes)
-        *Main> let a = lzwEncode arbreChar string20 in a==a
-        True
-        (56.08 secs, 19,658,114,232 bytes)
+
         *Main> let a = lzwEncode charsMin string20 in a==a
         True
         (244.45 secs, 61,103,861,384 bytes)
-        -}
-        {- test sur la V2 de l'arbre
+        *Main> let a = lzwEncode arbreChar string20 in a==a
+        True
+        (56.08 secs, 19,658,114,232 bytes)
+
+D'apres ces deux testes on remarques que la structure des arbres permet une execution plus rapide que celle des listes.
+
+        *Main> test16 charsMin 
+        True
+        (8.12 secs, 1,697,607,064 bytes)
         *Main> test16 arbreChar
         True
         (7.00 secs, 2,288,803,128 bytes)
+        
+        *Main> test18 charsMin
+        True
+        (54.39 secs, 10,940,895,496 bytes)
         *Main> test18 arbreChar
         True
         (32.70 secs, 10,924,613,928 bytes)
+        
         *Main> test20 arbreChar
         True
         (143.97 secs, 48,084,181,176 bytes)
         *Main> test20 charsMin
         True
         (254.38 secs, 63,607,594,816 bytes)
-        -}
 
 
 
