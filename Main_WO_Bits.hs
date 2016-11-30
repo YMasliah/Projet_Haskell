@@ -137,20 +137,20 @@ stringCodeToCode (stringCode:stringCodes) = [code] ++ stringCodeToCode stringCod
   code = read stringCode :: Code
 
 -- Le main pour l'executable du Encode   
-{-main :: IO ()
+main :: IO ()
 main =  do
  string <- getLine
  let result = (lzwEncode arbreChar string)
  print result
--}
 
+{-
 -- Le main pour l'executable du Decode
 main =  do
  string <- getLine
  let code = stringToCode string
  let result = (lzwDecode arbreChar code)
  putStrLn $ id result
-
+-}
 
 
 
