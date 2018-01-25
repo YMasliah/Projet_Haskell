@@ -2,3 +2,5 @@ ghc:
   - "7.10"
   - "7.8"
   - "7.6"
+script:
+  - stack --no-terminal --skip-ghc-check test
